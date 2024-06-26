@@ -6,33 +6,17 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import xima.com.data.model.Penguin
+import xima.com.repositories.PenguinRepository
 
-private const val BASE_URL = "http://172.0.0.1:8100"
 
-
-private var penguins = mutableListOf(
-    Penguin(1, "Joseph", "He's nice", "$BASE_URL/penguins/penguin1.jpg"),
-    Penguin(2, "Nikola", "He's nice two", "$BASE_URL/penguins/penguin2.jpg"),
-    Penguin(3, "Helena", "He's nice three", "$BASE_URL/penguins/penguin3.jpg"),
-    Penguin(4, "RG10", "He's nice fork", "$BASE_URL/penguins/penguin4.jpg"),
-    Penguin(5, "cassio", "He aint nice", "$BASE_URL/penguins/penguin5.jpg"),
-)
+val repository = PenguinRepository()
 
 
 fun Route.allPenguins() {
     get("/allPenguins") {
         call.respond(
             HttpStatusCode.OK,
-            penguins
-        )
-    }
-}
-
-fun Route.randomPenguin() {
-    get("/randomPenguin") {
-        call.respond(
-            HttpStatusCode.OK,
-            penguins.random()
+            repository.getAllPenguins()
         )
     }
 }
@@ -40,7 +24,7 @@ fun Route.randomPenguin() {
 fun Route.penguinById() {
     get(path = "/penguinById/{id}") {
         val id = call.parameters["id"]
-        val penguin = penguins.find { it.id.toString() == id }
+        val penguin = id?.let { it -> repository.getPenguinById(it) }
 
         if (penguin != null) {
             call.respond(HttpStatusCode.OK, penguin)
@@ -50,11 +34,21 @@ fun Route.penguinById() {
     }
 }
 
+fun Route.randomPenguin() {
+    get("/randomPenguin") {
+        call.respond(
+            HttpStatusCode.OK,
+            repository.getRandomPenguin()
+        )
+    }
+}
+
+
 fun Route.insertPenguin() {
     post("/insertPenguin") {
         try {
             val newPenguin = call.receive<Penguin>()
-            penguins.add(newPenguin)
+            repository.insertPenguin(newPenguin)
             call.respondText("Penguin was added", status = HttpStatusCode.Created)
         } catch (e: ContentTransformationException) {
             call.respond(HttpStatusCode.BadRequest, "Invalid Request!")
@@ -64,20 +58,39 @@ fun Route.insertPenguin() {
 }
 
 fun Route.deletePenguinById() {
-    route("/removePenguin") {
-        delete("/{id}") {
+    delete("/removePenguinById/{id}") {
 
-            val id = call.parameters["id"]
+        val id = call.parameters["id"]
 
-            if (id == null) {
-                call.respond(HttpStatusCode.BadRequest)
-                return@delete
-            }
-            if (penguins.removeIf { it.id.toString() == id }) {
-                call.respond(HttpStatusCode.NoContent)
-            } else {
-                call.respond(HttpStatusCode.NotFound)
-            }
+        if (id == null) {
+            call.respond(HttpStatusCode.BadRequest)
+            return@delete
+        }
+        if (repository.deletePenguinById(id)) {
+            call.respond(HttpStatusCode.NoContent)
+        } else {
+            call.respond(HttpStatusCode.NotFound)
+        }
+    }
+}
+
+fun Route.updatePenguinById() {
+    put("/updatePenguinById/{id}") {
+        val penguin = call.receive<Penguin>()
+        val penguinId = call.parameters["id"]?.toIntOrNull()
+
+        if (penguinId == null) {
+            call.respond(HttpStatusCode.BadRequest, "It has to be a number!")
+            return@put
+        }
+        val updated = repository.updatePenguinById(penguinId, penguin)
+        if (updated) {
+            call.respond(HttpStatusCode.OK)
+        } else {
+            call.respond(
+                HttpStatusCode.NotFound,
+                "Penguin not found! $penguinId"
+            )
         }
 
     }

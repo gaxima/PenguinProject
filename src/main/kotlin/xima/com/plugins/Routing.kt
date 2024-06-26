@@ -16,6 +16,7 @@ fun Application.configureRouting() {
         penguinById()
         insertPenguin()
         deletePenguinById()
+        updatePenguinById()
         // Static plugin. Try to access `/static/index.html`
         static {
             resources("static")
