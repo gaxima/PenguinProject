@@ -4,6 +4,7 @@ import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
 import xima.com.routes.*
+import java.io.File
 
 fun Application.configureRouting() {
     routing {
@@ -14,8 +15,9 @@ fun Application.configureRouting() {
         insertPenguin()
         deletePenguinById()
         updatePenguinById()
+        //staticResources("/resources", "static")
         // Static plugin. Try to access `/static/index.html`
-        static {
+        static{
             resources("static")
         }
     }

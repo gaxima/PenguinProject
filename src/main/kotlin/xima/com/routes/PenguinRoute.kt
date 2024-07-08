@@ -22,7 +22,7 @@ fun Route.initial() {
 
 
 fun Route.allPenguins() {
-    get("/penguins") {
+    get("/allPenguins") {
         val name = call.request.queryParameters["name"]
 
         val filteredPenguin = repository.getAllPenguins(name)
@@ -35,7 +35,7 @@ fun Route.allPenguins() {
 }
 
 fun Route.penguinById() {
-    get(path = "/penguins/{id}") {
+    get(path = "/allPenguins/{id}") {
         val id = call.parameters["id"]
         val penguin = id?.let { repository.getPenguinById(it) }
 
