@@ -11,20 +11,33 @@ import xima.com.repositories.PenguinRepository
 
 val repository = PenguinRepository()
 
-
-fun Route.allPenguins() {
-    get("/allPenguins") {
+fun Route.initial() {
+    get("/") {
         call.respond(
             HttpStatusCode.OK,
-            repository.getAllPenguins()
+            "Hello World"
         )
     }
 }
 
+
+fun Route.allPenguins() {
+    get("/penguins") {
+        val name = call.request.queryParameters["name"]
+
+        val filteredPenguin = repository.getAllPenguins(name)
+        if (filteredPenguin.isNotEmpty()) {
+            call.respond(HttpStatusCode.OK, filteredPenguin)
+        }else{
+            call.respond(HttpStatusCode.NotFound, "No penguin found!")
+        }
+    }
+}
+
 fun Route.penguinById() {
-    get(path = "/penguinById/{id}") {
+    get(path = "/penguins/{id}") {
         val id = call.parameters["id"]
-        val penguin = id?.let { it -> repository.getPenguinById(it) }
+        val penguin = id?.let { repository.getPenguinById(it) }
 
         if (penguin != null) {
             call.respond(HttpStatusCode.OK, penguin)
@@ -67,7 +80,7 @@ fun Route.deletePenguinById() {
             return@delete
         }
         if (repository.deletePenguinById(id)) {
-            call.respond(HttpStatusCode.NoContent)
+            call.respond(HttpStatusCode.NoContent, "penguin deleted")
         } else {
             call.respond(HttpStatusCode.NotFound)
         }

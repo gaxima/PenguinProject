@@ -1,6 +1,7 @@
 package xima.com.repositories
 
 import xima.com.data.model.Penguin
+import javax.print.DocFlavor.STRING
 
 private const val BASE_URL = "http://172.0.0.1:8100"
 
@@ -13,8 +14,12 @@ class PenguinRepository {
         Penguin(5, "cassio", "He aint nice", "$BASE_URL/penguins/penguin5.jpg")
     )
 
-    fun getAllPenguins(): List<Penguin> {
-        return penguins
+    fun getAllPenguins(name: String?): List<Penguin> {
+        return if (name != null) {
+            penguins.filter { it.name == name }
+        } else {
+            penguins
+        }
     }
 
     fun getPenguinById(id: String): Penguin? {
