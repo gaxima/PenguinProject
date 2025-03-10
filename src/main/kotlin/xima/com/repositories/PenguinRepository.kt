@@ -3,7 +3,7 @@ package xima.com.repositories
 import xima.com.data.model.Penguin
 import javax.print.DocFlavor.STRING
 
-private const val BASE_URL = "http://172.0.0.1:8100"
+private const val BASE_URL = "http://0.0.0.0:8080"
 
 class PenguinRepository {
     private val penguins = mutableListOf<Penguin>(
@@ -16,7 +16,7 @@ class PenguinRepository {
 
     fun getAllPenguins(name: String?): List<Penguin> {
         return if (name != null) {
-            penguins.filter { it.name == name }
+            penguins.filter { it.name.equals(name, ignoreCase = true)}
         } else {
             penguins
         }
