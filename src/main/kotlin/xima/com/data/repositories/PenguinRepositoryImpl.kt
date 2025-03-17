@@ -1,16 +1,14 @@
-package xima.com.repositories
+package xima.com.data.repositories
 
 import xima.com.data.model.Penguin
 
-private const val BASE_URL = "http://0.0.0.0:8080"
-
 class PenguinRepositoryImpl: PenguinRepository {
     private val penguins = mutableListOf<Penguin>(
-        Penguin(1, "Joseph", "He's nice", "$BASE_URL/penguins/penguin1.jpg"),
-        Penguin(2, "Nikola", "He's nice two", "$BASE_URL/penguins/penguin2.jpg"),
-        Penguin(3, "Helena", "He's nice three", "$BASE_URL/penguins/penguin3.jpg"),
-        Penguin(4, "RG10", "He's nice fork", "$BASE_URL/penguins/penguin4.jpg"),
-        Penguin(5, "cassio", "He aint nice", "$BASE_URL/penguins/penguin5.jpg")
+        Penguin(1, "Joseph", "He's nice", ""),
+        Penguin(2, "Nikola", "He's nice two", ""),
+        Penguin(3, "Helena", "He's nice three", ""),
+        Penguin(4, "RG10", "He's nice fork", ""),
+        Penguin(5, "cassio", "He aint nice", "")
     )
 
     override fun getAllPenguins(name: String?): List<Penguin> {

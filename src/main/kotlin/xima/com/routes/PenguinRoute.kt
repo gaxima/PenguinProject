@@ -6,7 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import xima.com.data.model.Penguin
-import xima.com.repositories.PenguinRepositoryImpl
+import xima.com.data.repositories.PenguinRepositoryImpl
 
 
 val repository = PenguinRepositoryImpl()

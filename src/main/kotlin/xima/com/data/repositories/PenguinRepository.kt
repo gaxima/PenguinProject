@@ -1,4 +1,4 @@
-package xima.com.repositories
+package xima.com.data.repositories
 
 import xima.com.data.model.Penguin
 
