@@ -6,10 +6,10 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import xima.com.data.model.Penguin
-import xima.com.repositories.PenguinRepository
+import xima.com.repositories.PenguinRepositoryImpl
 
 
-val repository = PenguinRepository()
+val repository = PenguinRepositoryImpl()
 
 fun Route.initial() {
     get("/") {
@@ -19,7 +19,6 @@ fun Route.initial() {
         )
     }
 }
-
 
 fun Route.allPenguins() {
     get("/allPenguins") {
@@ -105,6 +104,5 @@ fun Route.updatePenguinById() {
                 "Penguin not found! $penguinId"
             )
         }
-
     }
 }
